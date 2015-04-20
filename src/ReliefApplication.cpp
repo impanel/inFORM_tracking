@@ -244,7 +244,7 @@ void ReliefApplication::draw(){
         debugImage2.draw(610, 332, 300, 300);
         
         ofRect(913, 331, 302, 302);
-        debugImage3.draw(914, 332, 300, 300);
+        pinDisplayImage.draw(914, 332, 300, 300);
     }
 
     if (myCurrentRenderedObject == myHybridTokens) {
