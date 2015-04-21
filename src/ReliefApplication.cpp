@@ -270,7 +270,9 @@ void ReliefApplication::draw(){
 
 
     //Draw Graphics onto projector
-    pinDisplayImage.draw(projectorOffsetX, RELIEF_PROJECTOR_OFFSET_Y, RELIEF_PROJECTOR_SCALED_SIZE_X, RELIEF_PROJECTOR_SCALED_SIZE_Y);
+    if (paintGraphics) {
+        pinDisplayImage.draw(projectorOffsetX, RELIEF_PROJECTOR_OFFSET_Y, RELIEF_PROJECTOR_SCALED_SIZE_X, RELIEF_PROJECTOR_SCALED_SIZE_Y);
+    }
     
     
     //kinectTracker.draw(1, 306, 640, 480, 0, 0);
@@ -312,6 +314,18 @@ void ReliefApplication::keyPressed(int key){
 
     if(key == 'k') {
         myHybridTokens->setMode(DYNAMICALLY_CONSTRAINED_SWORDS);
+    }
+
+    if(key == 'z') {
+        drawPins = !drawPins;
+    }
+
+    if(key == 'x') {
+        shuntHigh = !shuntHigh;
+    }
+
+    if(key == 'c') {
+        paintGraphics = !paintGraphics;
     }
 
     if(key == ' ') {
@@ -383,6 +397,11 @@ void ReliefApplication::sendHeightToRelief(){
             int y = j;
             int x = RELIEF_SIZE_X - 1 - i;
             int heightMapValue = pixels[((x + (y * RELIEF_SIZE_X)) * 4)];
+            if (!drawPins) {
+                heightMapValue = 0;
+            } else if (shuntHigh) {
+                heightMapValue = 140;
+            }
             mPinHeightToRelief[i][j] = heightMapValue;
         }
     }
