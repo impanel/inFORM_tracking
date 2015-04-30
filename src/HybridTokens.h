@@ -41,6 +41,8 @@ private:
     void drawCubeRisers(float lengthScale);
     void drawAngleSwordsHeightMap(float lengthScale);
     void drawSwordsHeightMap(float lengthScale);
+    void drawAnimation();
+    ofVideoPlayer myPlayer;
 
     const float pinSize = 1.0 / RELIEF_SIZE_X;
 

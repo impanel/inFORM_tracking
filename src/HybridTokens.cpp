@@ -18,6 +18,9 @@ HybridTokens::HybridTokens(KinectTracker *tracker) {
     useStaticSecondSword = true;
     intersectSwords = false;
     blockadeSword = true;
+    
+    myPlayer.loadMovie("movies/scale_full_01.mov");
+    myPlayer.play()
 }
 
 void HybridTokens::drawHeightMap() {
@@ -31,9 +34,18 @@ void HybridTokens::update(float dt) {
     pinHeightMapImage.begin();
     ofBackground(0);
     ofSetColor(255);
-    drawAngleSwordsHeightMap(RELIEF_PROJECTOR_SIZE_X);
-    drawCubeRisers(RELIEF_PROJECTOR_SIZE_X);
+    //drawAngleSwordsHeightMap(RELIEF_PROJECTOR_SIZE_X);
+    //drawCubeRisers(RELIEF_PROJECTOR_SIZE_X);
+    drawAnimation();
     pinHeightMapImage.end();
+}
+
+
+void HybridTokens::drawAnimation() {
+    if (!myPlayer.getIsMovieDone()) {
+        myPlayer.update();
+        myPlyaer.draw(0, 0);
+    }
 }
 
 // lift cubes slightly above neighboring pins to facilitate smooth sliding
