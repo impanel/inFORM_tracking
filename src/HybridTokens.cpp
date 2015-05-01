@@ -14,7 +14,6 @@ HybridTokens::HybridTokens(KinectTracker *tracker) {
 
     // swords schema default
     useStaticSecondSword = true;
-    intersectSwords = false;
     blockadeSword = true;
 }
 
@@ -29,7 +28,7 @@ void HybridTokens::update(float dt) {
     pinHeightMapImage.begin();
     ofBackground(0);
     ofSetColor(255);
-    drawAngleSwordsHeightMap(RELIEF_PROJECTOR_SIZE_X);
+    drawSwordsHeightMap(RELIEF_PROJECTOR_SIZE_X);
     drawCubeRisers(RELIEF_PROJECTOR_SIZE_X);
     pinHeightMapImage.end();
 }
@@ -41,29 +40,6 @@ void HybridTokens::drawCubeRisers(float lengthScale) {
         int left = (cube->center.x - pinSize) * lengthScale;
         int top = (cube->center.y - pinSize) * lengthScale;
         ofRect(left, top, pinSize * 2 * lengthScale, pinSize * 2 * lengthScale);
-    }
-}
-
-void HybridTokens::drawAngleSwordsHeightMap(float lengthScale) {
-    // known width and height of our cubes
-    float cubeWidth = 4 * pinSize;
-    float cubeHeight = 4 * pinSize;
-
-    // sword attributes
-    ofSetColor(140);
-    int left, right, top, bottom;
-    left = -0.07 * lengthScale;
-    right = 0.07 * lengthScale;
-    top = (-0.07 - 3 * cubeHeight) * lengthScale;
-    bottom = (-0.07 - 0.3 * cubeHeight) * lengthScale;
-    
-    for (vector<Cube>::iterator cube = kinectTracker->redCubes.begin(); cube < kinectTracker->redCubes.end(); cube++) {
-        // draw sword appropriately rotated
-        glPushMatrix();
-        glTranslatef(cube->center.x * lengthScale, cube->center.y * lengthScale, 0.0f);
-        glRotatef(-cube->theta, 0.0f, 0.0f, 1.0f);
-        ofRect(left, top, right - left, bottom - top);
-        glPopMatrix();
     }
 }
 
@@ -99,19 +75,6 @@ void HybridTokens::drawSwordsHeightMap(float lengthScale) {
             fixedBottom = (fixedCenter.y + 0.07) * lengthScale;
             ofRect(fixedLeft, fixedTop, fixedRight - fixedLeft, fixedBottom - fixedTop);
             
-            // draw sword intersections
-            if (intersectSwords) {
-                ofSetColor(255);
-                if (fixedLeft < right && fixedRight > left && fixedTop < bottom && fixedBottom > top) {
-                    int overlapLeft, overlapRight, overlapTop, overlapBottom;
-                    overlapLeft = left < fixedLeft ? fixedLeft : left;
-                    overlapRight = right < fixedRight ? right : fixedRight;
-                    overlapTop = top < fixedTop ? fixedTop : top;
-                    overlapBottom = bottom < fixedBottom ? bottom : fixedBottom;
-                    ofRect(overlapLeft, overlapTop, overlapRight - overlapLeft, overlapBottom - overlapTop);
-                }
-            }
-            
             // draw blockade
             if (blockadeSword) {
                 ofSetColor(140);
@@ -130,10 +93,6 @@ void HybridTokens::drawSwordsHeightMap(float lengthScale) {
 void HybridTokens::keyPressed(int key) {
     if(key == 's') {
         useStaticSecondSword = !useStaticSecondSword;
-    }
-
-    if(key == 'i') {
-        intersectSwords = !intersectSwords;
     }
 
     if(key == 'b') {

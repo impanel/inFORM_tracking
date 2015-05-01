@@ -31,7 +31,6 @@ public:
 
     // swords schema specifiers
     bool useStaticSecondSword;
-    bool intersectSwords;
     bool blockadeSword;
     
 private:
@@ -39,7 +38,6 @@ private:
     ofFbo pinHeightMapImage; //FBO where we render height map
 
     void drawCubeRisers(float lengthScale);
-    void drawAngleSwordsHeightMap(float lengthScale);
     void drawSwordsHeightMap(float lengthScale);
 
     const float pinSize = 1.0 / RELIEF_SIZE_X;

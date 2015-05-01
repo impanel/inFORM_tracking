@@ -261,7 +261,6 @@ void ReliefApplication::keyPressed(int key){
 
     // keys reserved for rendered objects' use
     if(key == 's') myCurrentRenderedObject->keyPressed('s');
-    if(key == 'i') myCurrentRenderedObject->keyPressed('i');
     if(key == 'b') myCurrentRenderedObject->keyPressed('b');
     if(key == KEY_UP) myCurrentRenderedObject->keyPressed(KEY_UP);
     if(key == KEY_DOWN) myCurrentRenderedObject->keyPressed(KEY_DOWN);
