@@ -16,7 +16,7 @@
 #include "ofFbo.h"
 
 
-enum HybridTokensMode {BOOLEAN_SWORDS, FLEXIBLE_SWORDS, PHYSICS_SWORDS};
+enum HybridTokensMode {BOOLEAN_SWORDS, FLEXIBLE_SWORDS, PHYSICS_SWORDS, DYNAMICALLY_CONSTRAINED_SWORDS};
 enum BooleanSwordsSchema {SUM, XOR, UNION, INTERSECTION};
 enum TouchCondition {TOUCHED, NOT_TOUCHED, UNDEFINED};
 enum TiltDirection {NO_TILT, TILT_FORWARD, TILT_BACKWARD};
@@ -58,6 +58,7 @@ private:
     void drawBooleanSwords();
     void drawFlexibleSwords(int height=STANDARD_CUBE_HEIGHT);
     void drawPhysicsSwords();
+    void drawDynamicallyConstrainedSwords();
     TiltDirection getPhysicsSwordTiltDirection(Cube &topCube, Cube &bottomCube);
 
     Rectangle swordRectangle;
