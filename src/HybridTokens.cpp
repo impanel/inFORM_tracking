@@ -110,7 +110,11 @@ void HybridTokens::updateGraphics() {
         } else {
             // since the height map rgba pixels are grayscale, the first channel is sufficient
             // to distinguish pin height
-            if (pinHeightMapContentPixels[i] > 150) {
+            if (pinHeightMapContentPixels[i] > 141) {
+                pinGraphicsPixels[i + 0] = 0;
+                pinGraphicsPixels[i + 1] = 0;
+                pinGraphicsPixels[i + 2] = 255;
+            } else if (pinHeightMapContentPixels[i] > 140) {
                 pinGraphicsPixels[i + 0] = pinColorIfHigh[0];
                 pinGraphicsPixels[i + 1] = pinColorIfHigh[1];
                 pinGraphicsPixels[i + 2] = pinColorIfHigh[2];
@@ -520,7 +524,7 @@ void HybridTokens::drawDynamicallyConstrainedSwords() {
     // for now, assume all cubes are aligned to the coordinate axes
 
     // draw static sword right
-    ofSetColor(140);
+    ofSetColor(141);
     int fixedLeft, fixedRight, fixedTop, fixedBottom;
     fixedLeft = (fixedCube->center.x + 0.5 * cubeEdgeLength) * lengthScale;
     fixedRight = (fixedCube->center.x + (0.5 + 3) * cubeEdgeLength) * lengthScale;
@@ -553,7 +557,7 @@ void HybridTokens::drawDynamicallyConstrainedSwords() {
 
     // draw blockade if appropriate
     if (!swordMayPass) {
-        ofSetColor(140);
+        ofSetColor(142);
         int closeDistance = 0.07 * lengthScale;
         if (left < fixedRight + closeDistance) {
             int adjWidth = cubeEdgeLength * lengthScale;
