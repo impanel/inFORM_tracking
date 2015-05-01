@@ -253,17 +253,18 @@ void ReliefApplication::draw(){
         ofDrawBitmapString(" 'n' : flexible swords", 1, 400);
         ofDrawBitmapString(" 'm' : physics swords", 1, 420);
         ofDrawBitmapString(" 'k' : dynamically constrained swords", 1, 440);
-        
+
+        int subMenuHeight = 440 + 50;
         if (myHybridTokens->mode == BOOLEAN_SWORDS) {
-            ofDrawBitmapString("Sub-Application:", 1, 490);
-            ofDrawBitmapString(" 'a' : union", 1, 520);
-            ofDrawBitmapString(" 's' : intersect", 1, 540);
-            ofDrawBitmapString(" 'd' : sum", 1, 560);
-            ofDrawBitmapString(" 'f' : xor", 1, 580);
+            ofDrawBitmapString("Sub-Application:", 1, subMenuHeight);
+            ofDrawBitmapString(" 'a' : union", 1, subMenuHeight + 30);
+            ofDrawBitmapString(" 's' : intersect", 1, subMenuHeight + 50);
+            ofDrawBitmapString(" 'd' : sum", 1, subMenuHeight + 70);
+            ofDrawBitmapString(" 'f' : xor", 1, subMenuHeight + 90);
         } else if (myHybridTokens->mode == FLEXIBLE_SWORDS) {
-            ofDrawBitmapString("Sub-Application:", 1, 490);
-            ofDrawBitmapString(" '-' : decrease extension", 1, 520);
-            ofDrawBitmapString(" '+' : increase extension", 1, 540);
+            ofDrawBitmapString("Sub-Application:", 1, subMenuHeight);
+            ofDrawBitmapString(" '-' : decrease extension", 1, subMenuHeight + 30);
+            ofDrawBitmapString(" '+' : increase extension", 1, subMenuHeight + 50);
         }
     }
 
