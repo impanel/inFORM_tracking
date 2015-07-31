@@ -24,7 +24,9 @@ float reprojectProjectorXCoordinateFromHeight(float x, int height) {
 }
 
 float reprojectProjectorYCoordinateFromHeight(float y, int height) {
-    return (1 - 0.0001588 * height) * y - 0.00002 * height;
+    float reprojected = (1 - 0.0001588 * height) * y - 0.00002 * height;
+    reprojected -= 0.0333; // short-term calibration hack: note that this breaks the intended structure of the math
+    return reprojected;
 }
 
 // reproject 2D pixels for projection onto a height map
@@ -103,7 +105,7 @@ void reprojectProjectorPixelsForHeightMap(ofPixels &pixels2D, ofPixels &heightMa
                 reprojectedPixels[iRP + 0] = pixels2D[indexAt255 + 0];
                 reprojectedPixels[iRP + 1] = pixels2D[indexAt255 + 1];
                 reprojectedPixels[iRP + 2] = pixels2D[indexAt255 + 2];
-            } else if (indexInRangeAt140 && heightMap[indexAt140] > 100) {
+            } else if (indexInRangeAt140) {// && heightMap[indexAt140] > 100) {    // short-term calibration hack
                 reprojectedPixels[iRP + 0] = pixels2D[indexAt140 + 0];
                 reprojectedPixels[iRP + 1] = pixels2D[indexAt140 + 1];
                 reprojectedPixels[iRP + 2] = pixels2D[indexAt140 + 2];
