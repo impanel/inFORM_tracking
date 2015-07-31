@@ -208,6 +208,11 @@ void HybridTokens::drawSwordForCube(Cube &cube, int height, int farHeight) {
     // draw sword
     drawSword(height, farHeight);
 
+    // if this cube owns any subcubes, draw their swords
+    for (int i = 0; i < cube.subCubesCount; i++) {
+        drawSwordForCube(*cube.subCubes[i], height, farHeight);
+    }
+
     // reset coordinate system
     glPopMatrix();
 }
@@ -835,5 +840,12 @@ void HybridTokens::keyPressed(int key) {
 
     if(key == '=' || key == '+') {
         flexibleExtensionSize += 0.1;
+    }
+
+    // merge
+    if(key == 'm') {
+        if (mode == BOOLEAN_SWORDS && kinectTracker->redCubes.size() == 2) {
+            kinectTracker->redCubes[0].addSubCube(&kinectTracker->redCubes[1]);
+        }
     }
 }

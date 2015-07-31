@@ -49,6 +49,40 @@ Cube::Cube(Blob *_blob, ofPoint _marker, bool _update) :
     initialize();
 }
 
+Cube::Cube(Cube *cube) :
+    candidateUpdates(*new CubeUpdatesBuffer),
+    timeOfInitialization(cube->timeOfInitialization)
+{
+    candidateUpdates.blob = NULL;
+    candidateUpdates.hasMarker = false;
+    initialize();
+
+    normalizationVector = cube->normalizationVector;
+    theta = cube->theta;
+    thetaRadians = cube->thetaRadians;
+    width = cube->width;
+    height = cube->height;
+    center = cube->center;
+    for (int i = 0; i < 4; i++) {
+        corners[i] = cube->corners[i];
+        absCorners[i] = cube->absCorners[i];
+    }
+    minX = cube->minX;
+    maxX = cube->maxX;
+    minY = cube->minY;
+    maxY = cube->maxY;
+
+    subCubesCount = cube->subCubesCount;
+    for (int i = 0; i < subCubesCount; i++) {
+        subCubes[i] = new Cube(cube->subCubes[i]);
+        subCubes[i]->isSubCube = true;
+    }
+
+    for (int i = 0; i < recentThetaCandidatesLength; i++) {
+        recentThetaCandidates[i] = cube->recentThetaCandidates[i];
+    }
+}
+
 void Cube::initialize() {
     // initialize all recent theta values negative (for null)
     for (int i = 0; i < recentThetaCandidatesLength; i++) {
@@ -57,6 +91,10 @@ void Cube::initialize() {
 }
 
 Cube::~Cube() {
+    for (int i = 0; i < subCubesCount; i++) {
+        // for some reason this errors, but it seems like we should want it:
+        //delete subCubes[i];
+    }
     candidateUpdates.~CubeUpdatesBuffer();
 }
 
@@ -331,4 +369,39 @@ void Cube::transformPointFromCubeReferenceFrame(ofPoint *src, ofPoint *dst, floa
     // rotation is by -theta, not theta, because +y is down
     dst->rotate(-theta, ofPoint(0, 0, 1));
     *dst += (center * lengthScale);
+}
+
+void Cube::transformCubeToCubeReferenceFrame(Cube *cube) {
+    transformPointToCubeReferenceFrame(&cube->center, &cube->center);
+
+    // absolute corner coordinates
+    cube->absCorners[0] = cube->center + cube->corners[0];
+    cube->absCorners[1] = cube->center + cube->corners[1];
+    cube->absCorners[2] = cube->center + cube->corners[2];
+    cube->absCorners[3] = cube->center + cube->corners[3];
+
+    // cube boundary descriptors
+    minX = absCorners[0].x;
+    maxX = absCorners[2].x;
+    minY = absCorners[1].y;
+    maxY = absCorners[3].y;
+
+    cube->theta = cube->theta - theta;
+    cube->thetaRadians = cube->thetaRadians - thetaRadians;
+
+    for (int i = 0; i < recentThetaCandidatesLength; i++) {
+        cube->recentThetaCandidates[i] = cube->recentThetaCandidates[i] - theta;
+    }
+}
+
+void Cube::addSubCube(Cube *subCube) {
+    if (subCubesCount >= maxSubCubesCount) {
+        return;
+    }
+
+    Cube *subCubeCopy = new Cube(subCube);
+    transformCubeToCubeReferenceFrame(subCubeCopy);
+    subCubeCopy->isSubCube = true;
+    subCubes[subCubesCount] = subCubeCopy;
+    subCubesCount++;
 }

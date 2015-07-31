@@ -122,7 +122,7 @@ void KinectTracker::updateInputImages(){
     // get color image data in region of interest
     colorImgRaw.setFromPixels(kinect.getPixels(), kinect.width, kinect.height);
     colorImg.setFromPixels(colorImgRaw.getRoiPixels(), frameWidth, frameHeight);
-    
+
     // get depth image data in region of interest
     depthImgRaw.setFromPixels(kinect.getDepthPixels(), kinect.width, kinect.height);
     depthImg.setFromPixels(depthImgRaw.getRoiPixels(), frameWidth, frameHeight);

@@ -348,6 +348,7 @@ void ReliefApplication::keyPressed(int key){
     if(key == 's') myCurrentRenderedObject->keyPressed('s');
     if(key == 'd') myCurrentRenderedObject->keyPressed('d');
     if(key == 'f') myCurrentRenderedObject->keyPressed('f');
+    if(key == 'm') myCurrentRenderedObject->keyPressed('m');
     if(key == '-') myCurrentRenderedObject->keyPressed('-');
     if(key == '=') myCurrentRenderedObject->keyPressed('=');
     if(key == '+') myCurrentRenderedObject->keyPressed('+');

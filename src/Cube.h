@@ -29,6 +29,7 @@
 // Note that this coordinate system is left-handed! Be careful when rotating.
 
 const float pinSize = 1.0 / RELIEF_SIZE_X;
+const int maxSubCubesCount = 10;
 
 class CubeUpdatesBuffer {
 public:
@@ -56,6 +57,7 @@ public:
     Cube();
     Cube(Blob *_blob, bool _update=true);
     Cube(Blob *_blob, ofPoint _marker, bool _update=true);
+    Cube(Cube *cube);
     ~Cube();
     bool isValid();         // test if cube is set up; cube only has meaning when it owns a blob
     void update();
@@ -66,6 +68,8 @@ public:
     Blob *getCandidateBlob();
     void transformPointToCubeReferenceFrame(ofPoint *src, ofPoint *dst, float lengthScale=1.0);
     void transformPointFromCubeReferenceFrame(ofPoint *src, ofPoint *dst, float lengthScale=1.0);
+    void transformCubeToCubeReferenceFrame(Cube *cube);
+    void addSubCube(Cube *subCube);
 
     int blobId;
     double timeOfInitialization; // the time at which this object was created
@@ -84,6 +88,9 @@ public:
     ofPoint absCorners[4];  // corners in absolute coordinates
     float minX, maxX, minY, maxY; // cube boundary descriptors (absolute coordinates)
     int cubeTrackingId = -1; // cube managers may assign cube ids if desired
+    bool isSubCube = false;
+    int subCubesCount = 0;
+    Cube *subCubes[maxSubCubesCount];
 
 private:
     CubeUpdatesBuffer candidateUpdates;
