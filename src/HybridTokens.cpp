@@ -54,6 +54,16 @@ void HybridTokens::update(float dt) {
     ofBackground(0);
     ofSetColor(255);
 
+    if (rotateSwordOneStep) {
+        swordRotationAngle += swordRotationMultiplier * 5;
+        if (swordRotationAngle >= 90) {
+            swordRotationMultiplier = -1;
+        } else if (swordRotationAngle <= 0) {
+            swordRotationMultiplier = 1;
+        }
+        rotateSwordOneStep = false;
+    }
+
     if (mode == BOOLEAN_SWORDS) {
         drawBooleanSwords();
 
@@ -380,6 +390,41 @@ void HybridTokens::drawBooleanSwords() {
         for (int i = 0; i < storedSwordsOutput.size(); i++) {
             if (storedSwordsIntersection[i]) {
                 storedSwordsOutput[i] = 0;
+            }
+        }
+
+        // rotate stored swords output if appropriate
+        if (swordRotationAngle != 0) {
+            ofFbo rotatedSwords;
+            rotatedSwords.allocate(lengthScale, lengthScale, GL_RGBA);
+            rotatedSwords.begin();
+            ofBackground(0);
+            ofSetColor(255);
+
+            // rotate coordinate system
+            glPushMatrix();
+            glTranslatef(0.5 * lengthScale, 0.5 * lengthScale, 0.0f);
+            glRotatef(swordRotationAngle, 0.0f, 0.0f, 1.0f);
+            glTranslatef(-0.5 * lengthScale, -0.5 * lengthScale, 0.0f);
+
+            // draw sword
+            ofImage(storedSwordsOutput).draw(0, 0);
+
+            // reset coordinate system
+            glPopMatrix();
+
+            rotatedSwords.end();
+
+            rotatedSwords.readToPixels(storedSwordsOutput);
+            storedSwordsOutput.setNumChannels(1);
+
+            // remove blurry edges
+            for (int i = 0; i < storedSwordsOutput.size(); i++) {
+                if (storedSwordsOutput[i] > 70) {
+                    storedSwordsOutput[i] = 140;
+                } else {
+                    storedSwordsOutput[i] = 0;
+                }
             }
         }
     }
@@ -912,5 +957,10 @@ void HybridTokens::keyPressed(int key) {
             kinectTracker->redCubes[0].addSubCube(&kinectTracker->redCubes[1]);
             kinectTracker->redCubes[1].disabled = true;
         }
+    }
+
+    // rotate
+    if(key == 'k') {
+        rotateSwordOneStep = true;
     }
 }

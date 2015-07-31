@@ -57,6 +57,9 @@ private:
     ofPixels pinGraphicsPixels;               // pixels object where we render graphics
     ofPixels reprojectedPinGraphicsPixels;    // pixels object whose graphics account for the underlying pin heights
     vector<Cube> storedCubes;
+    bool rotateSwordOneStep = false;
+    int swordRotationAngle = 0;
+    int swordRotationMultiplier = 1;
 
     void updateGraphics();
     void setCubeHeight(Cube &cube, int height, float edgeLengthMultiplier = 1.0);
