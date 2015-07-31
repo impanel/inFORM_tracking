@@ -368,22 +368,18 @@ void HybridTokens::drawBooleanSwords() {
     // sum of swords (add intersection on top of union)
     } else if (booleanSwordsSchema == SUM) {
         swordsOutput = swordsUnion;
-        if (kinectTracker->redCubes.size() > 1) {
-            for (int j = 0; j < swordsOutput.size(); j++) {
-                if (swordsIntersection[j]) {
-                    swordsOutput[j] = 255; //swordsOutput[j] += swordsIntersection[j];
-                }
+        for (int j = 0; j < swordsOutput.size(); j++) {
+            if (swordsIntersection[j]) {
+                swordsOutput[j] = 255; //swordsOutput[j] += swordsIntersection[j];
             }
         }
 
     // xor of swords (subtract intersection from union)
     } else if (booleanSwordsSchema == XOR) {
         swordsOutput = swordsUnion;
-        if (kinectTracker->redCubes.size() > 1) {
-            for (int j = 0; j < swordsOutput.size(); j++) {
-                if (swordsIntersection[j]) {
-                    swordsOutput[j] = 0;
-                }
+        for (int j = 0; j < swordsOutput.size(); j++) {
+            if (swordsIntersection[j]) {
+                swordsOutput[j] = 0;
             }
         }
     }
