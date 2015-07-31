@@ -953,9 +953,25 @@ void HybridTokens::keyPressed(int key) {
 
     // merge
     if(key == 'm') {
-        if (mode == BOOLEAN_SWORDS && kinectTracker->redCubes.size() == 2) {
-            kinectTracker->redCubes[0].addSubCube(&kinectTracker->redCubes[1]);
-            kinectTracker->redCubes[1].disabled = true;
+        if (mode == BOOLEAN_SWORDS) {
+            if (storedCubes.size() > 0 && kinectTracker->redCubes.size() > 0) {
+                Cube *cube = &kinectTracker->redCubes[0];
+
+                //transformPointToCubeReferenceFrame(&cube->center, &cube->center);
+
+                cube->center -= ofPoint(0.5, 0.5);
+                cube->center.rotate(-swordRotationAngle, ofPoint(0, 0, 1));
+                cube->center += ofPoint(0.5, 0.5);
+                cube->theta += swordRotationAngle;
+                cube->thetaRadians += swordRotationAngle * pi / 180;
+
+                storedCubes[0].addSubCube(cube);
+                cube->disabled = true;
+
+            } else if (kinectTracker->redCubes.size() > 1) {
+                kinectTracker->redCubes[0].addSubCube(&kinectTracker->redCubes[1]);
+                kinectTracker->redCubes[1].disabled = true;
+            }
         }
     }
 

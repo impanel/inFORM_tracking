@@ -386,11 +386,11 @@ void Cube::transformCubeToCubeReferenceFrame(Cube *cube) {
     minY = absCorners[1].y;
     maxY = absCorners[3].y;
 
-    cube->theta = cube->theta - theta;
-    cube->thetaRadians = cube->thetaRadians - thetaRadians;
+    cube->theta -= theta;
+    cube->thetaRadians -= thetaRadians;
 
     for (int i = 0; i < recentThetaCandidatesLength; i++) {
-        cube->recentThetaCandidates[i] = cube->recentThetaCandidates[i] - theta;
+        cube->recentThetaCandidates[i] -= theta;
     }
 }
 
