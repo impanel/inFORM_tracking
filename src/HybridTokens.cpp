@@ -200,6 +200,10 @@ void HybridTokens::drawSword(vector<pair<float, float> > &interpolationPoints) {
 // height value defaults to cube height. passing a non-negative value to farHeight
 // linearly interpolates the sword height
 void HybridTokens::drawSwordForCube(Cube &cube, int height, int farHeight) {
+    if (cube.disabled) {
+        return;
+    }
+
     // transition to the cube's reference frame
     glPushMatrix();
     glTranslatef(cube.center.x * lengthScale, cube.center.y * lengthScale, 0.0f);
@@ -846,6 +850,7 @@ void HybridTokens::keyPressed(int key) {
     if(key == 'm') {
         if (mode == BOOLEAN_SWORDS && kinectTracker->redCubes.size() == 2) {
             kinectTracker->redCubes[0].addSubCube(&kinectTracker->redCubes[1]);
+            kinectTracker->redCubes[1].disabled = true;
         }
     }
 }

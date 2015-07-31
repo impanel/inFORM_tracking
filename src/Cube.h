@@ -88,6 +88,7 @@ public:
     ofPoint absCorners[4];  // corners in absolute coordinates
     float minX, maxX, minY, maxY; // cube boundary descriptors (absolute coordinates)
     int cubeTrackingId = -1; // cube managers may assign cube ids if desired
+    bool disabled = false; // a disabled cube casts a clearing but nothing else
     bool isSubCube = false;
     int subCubesCount = 0;
     Cube *subCubes[maxSubCubesCount];
