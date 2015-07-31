@@ -254,6 +254,16 @@ void HybridTokens::drawStandardClearingsAndRisers() {
     setCubeHeights(40, 1.0, TOUCHED);
 }
 
+// give joints room to rest uninterrupted
+void HybridTokens::drawJointClearings() {
+    ofSetColor(0);
+
+    // -- for now, we will insist that the intersection occurs in the display's center
+    float scaledEdgeLength = cubeEdgeLength * lengthScale;
+    ofPoint center(lengthScale / 2, lengthScale / 2);
+    ofRect(center.x - scaledEdgeLength / 2, center.y - scaledEdgeLength / 2, scaledEdgeLength, scaledEdgeLength);
+}
+
 // calculate the intersection and union drawings of the swords for all cubes
 void HybridTokens::getSwordsIntersectionAndUnion(ofPixels &swordsIntersection, ofPixels &swordsUnion, bool useStoredCubes) {
     // buffer repository for drawing a single sword into; associated pixels object for manipulating the result
@@ -387,11 +397,13 @@ void HybridTokens::drawBooleanSwords() {
         ofPixels storedSwordsIntersection, storedSwordsUnion;
         getSwordsIntersectionAndUnion(storedSwordsIntersection, storedSwordsUnion, true);
         storedSwordsOutput = storedSwordsUnion;
+        /* -- for now, we will insist that the intersection occurs in the display's center
+        // remove intersection to make room for joint
         for (int i = 0; i < storedSwordsOutput.size(); i++) {
             if (storedSwordsIntersection[i]) {
                 storedSwordsOutput[i] = 0;
             }
-        }
+        } */
 
         // rotate stored swords output if appropriate
         if (swordRotationAngle != 0) {
@@ -494,6 +506,11 @@ void HybridTokens::drawBooleanSwords() {
 
     // but give cubes room to move
     drawStandardClearingsAndRisers();
+
+    // and give joints room to sit
+    if (storedCubes.size() > 1) {
+        drawJointClearings();
+    }
 }
 
 // for now, this function assumes a maximum of two cubes to deal with

@@ -69,6 +69,7 @@ private:
     void drawSwordForCube(Cube &cube, int height=STANDARD_CUBE_HEIGHT, int farHeight=-1);
     void drawSwordForCube(Cube &cube, vector<pair<float, float> > &interpolationPoints);
     void drawStandardClearingsAndRisers();
+    void drawJointClearings();
     void getSwordsIntersectionAndUnion(ofPixels &swordsIntersection, ofPixels &swordsUnion, bool useStoredCubes=false);
     void getSwordsAxesIntersectionPoint(Cube &firstCube, Cube &secondCube, ofPoint &dst);
     void getCenterOfImageBlob(ofPixels &thresholdedPixels, ofPoint &dst);
