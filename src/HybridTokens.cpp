@@ -245,7 +245,7 @@ void HybridTokens::drawStandardClearingsAndRisers() {
 }
 
 // calculate the intersection and union drawings of the swords for all cubes
-void HybridTokens::getSwordsIntersectionAndUnion(ofPixels &swordsIntersection, ofPixels &swordsUnion) {
+void HybridTokens::getSwordsIntersectionAndUnion(ofPixels &swordsIntersection, ofPixels &swordsUnion, bool useStoredCubes) {
     // buffer repository for drawing a single sword into; associated pixels object for manipulating the result
     ofFbo swordBuffer;
     ofPixels swordPixels;
@@ -257,12 +257,20 @@ void HybridTokens::getSwordsIntersectionAndUnion(ofPixels &swordsIntersection, o
     swordsIntersection.set(255);
     swordsUnion.set(0);
 
+    // select which cubes we're using
+    vector<Cube> *cubes;
+    if (useStoredCubes) {
+        cubes = &storedCubes;
+    } else {
+        cubes = &kinectTracker->redCubes;
+    }
+
     // draw each cube's sword and update the swords' intersection and union
-    for (int i = 0; i < kinectTracker->redCubes.size(); i++) {
+    for (int i = 0; i < (*cubes).size(); i++) {
         // draw sword into buffer
         swordBuffer.begin();
         ofBackground(0);
-        drawSwordForCube(kinectTracker->redCubes[i]);
+        drawSwordForCube((*cubes)[i]);
         swordBuffer.end();
 
         // extract sword data as grayscale pixels
@@ -348,14 +356,32 @@ void HybridTokens::drawSwords() {
         drawSwordForCube(kinectTracker->redCubes[i]);
     }
 
+    // if there are stored cubes, draw their swords
+    for (int i = 0; i < storedCubes.size(); i++) {
+        drawSwordForCube(storedCubes[i]);
+    }
+
     // but give cubes room to move
     drawStandardClearingsAndRisers();
 }
 
 void HybridTokens::drawBooleanSwords() {
-    if (kinectTracker->redCubes.size() < 2) {
+    if (kinectTracker->redCubes.size() < 2 && storedCubes.size() < 2) {
         drawSwords();
         return;
+    }
+
+    // calculate intersection and union of stored cubes' swords
+    ofPixels storedSwordsOutput;
+    if (storedCubes.size() > 1) {
+        ofPixels storedSwordsIntersection, storedSwordsUnion;
+        getSwordsIntersectionAndUnion(storedSwordsIntersection, storedSwordsUnion, true);
+        storedSwordsOutput = storedSwordsUnion;
+        for (int i = 0; i < storedSwordsOutput.size(); i++) {
+            if (storedSwordsIntersection[i]) {
+                storedSwordsOutput[i] = 0;
+            }
+        }
     }
 
     // calculate intersection and union of swords
@@ -389,6 +415,30 @@ void HybridTokens::drawBooleanSwords() {
         for (int j = 0; j < swordsOutput.size(); j++) {
             if (swordsIntersection[j]) {
                 swordsOutput[j] = 0;
+            }
+        }
+    }
+
+    // merge stored swords with new swords
+    if (storedCubes.size() > 1) {
+        if (kinectTracker->redCubes.size() == 0) {
+            swordsOutput = storedSwordsOutput;
+        } else {
+            if (kinectTracker->redCubes.size() == 1) {
+                swordsOutput = swordsUnion;
+            }
+            for (int i = 0; i < swordsOutput.size(); i++) {
+                if (storedSwordsOutput[i]) {
+                    if (swordsOutput[i]) {
+                        if (booleanSwordsSchema == SUM) {
+                            swordsOutput[i] = 255;
+                        } else if (booleanSwordsSchema == XOR) {
+                            swordsOutput[i] = 0;
+                        }
+                    } else {
+                        swordsOutput[i] = storedSwordsOutput[i];
+                    }
+                }
             }
         }
     }
@@ -844,6 +894,16 @@ void HybridTokens::keyPressed(int key) {
 
     if(key == '=' || key == '+') {
         flexibleExtensionSize += 0.1;
+    }
+
+    // lock
+    if(key == 'l') {
+        if (mode == BOOLEAN_SWORDS) {
+            for (int i = 0; i < kinectTracker->redCubes.size(); i++) {
+                storedCubes.push_back(Cube(kinectTracker->redCubes[i]));
+                kinectTracker->redCubes[i].disabled = true;
+            }
+        }
     }
 
     // merge

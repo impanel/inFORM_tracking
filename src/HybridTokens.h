@@ -56,6 +56,7 @@ private:
     ofPixels pinHeightMapContentPixels;       // pixels object for computing on pin height map content
     ofPixels pinGraphicsPixels;               // pixels object where we render graphics
     ofPixels reprojectedPinGraphicsPixels;    // pixels object whose graphics account for the underlying pin heights
+    vector<Cube> storedCubes;
 
     void updateGraphics();
     void setCubeHeight(Cube &cube, int height, float edgeLengthMultiplier = 1.0);
@@ -65,7 +66,7 @@ private:
     void drawSwordForCube(Cube &cube, int height=STANDARD_CUBE_HEIGHT, int farHeight=-1);
     void drawSwordForCube(Cube &cube, vector<pair<float, float> > &interpolationPoints);
     void drawStandardClearingsAndRisers();
-    void getSwordsIntersectionAndUnion(ofPixels &swordsIntersection, ofPixels &swordsUnion);
+    void getSwordsIntersectionAndUnion(ofPixels &swordsIntersection, ofPixels &swordsUnion, bool useStoredCubes=false);
     void getSwordsAxesIntersectionPoint(Cube &firstCube, Cube &secondCube, ofPoint &dst);
     void getCenterOfImageBlob(ofPixels &thresholdedPixels, ofPoint &dst);
     void drawSwords();
